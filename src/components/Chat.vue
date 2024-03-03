@@ -11,34 +11,49 @@
             v-for="(msg, index) in messages"
             :key="index"
             class="mb-4"
-            variant="tonal"
-            color="primary"
+            :variant="msg.role === 'system' ? 'outlined' : 'flat'"
           >
-            <v-card-text>{{ msg }}</v-card-text>
-          </v-card>
-          <v-card
-            v-if="messages.length === 0"
-            :key="index"
-            class="mb-4"
-            variant="tonal"
-            color="primary"
-          >
-            <v-card-text>Build a python game</v-card-text>
-          </v-card>
-          <v-card
-            v-if="messages.length === 0"
-            :key="index"
-            class="mb-4"
-            variant="tonal"
-            color="primary"
-          >
-            <v-card-text>Help me write a menifesto</v-card-text>
+            <v-card-text>{{ msg.content }}</v-card-text>
           </v-card>
         </div>
-
-        <!-- Input Area at the Bottom -->
       </v-col>
     </v-row>
+
+    <v-row
+      v-if="messages.length === 0"
+      class="justify-space-between flex-grow-0"
+    >
+      <v-spacer></v-spacer>
+      <v-card
+        :key="index"
+        class="ma-4"
+        variant="tonal"
+        color="primary"
+        @click="sendMessage"
+      >
+        <v-card-text>Build a python game</v-card-text>
+      </v-card>
+      <v-card
+        :key="index"
+        class="ma-4"
+        variant="tonal"
+        color="primary"
+        @click="sendMessage"
+      >
+        <v-card-text>Help me write a menifesto</v-card-text>
+      </v-card>
+      <v-card
+        :key="index"
+        class="ma-4"
+        variant="tonal"
+        color="primary"
+        @click="sendMessage"
+      >
+        <v-card-text>Assist in a task</v-card-text>
+      </v-card>
+      <v-spacer></v-spacer>
+    </v-row>
+
     <v-row class="flex-grow-0">
       <v-col cols="12">
         <v-text-field
@@ -58,15 +73,51 @@
 
 <script setup>
 import { ref, watch, nextTick } from "vue";
+import axios from "axios";
 
-const message = ref("");
-const messages = ref([]);
 const messagesContainer = ref(null);
+const message = ref("");
 
-function sendMessage() {
+const messages = ref([]);
+
+const openAIKey = "";
+
+async function fetchOpenAIResponse(userMessage) {
+  try {
+    const payload = {
+      model: "gpt-3.5-turbo",
+      messages: [...messages.value, { role: "user", content: userMessage }],
+      stream: true,
+    };
+
+    const response = await axios.post(
+      "https://api.openai.com/v1/chat/completions",
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${openAIKey}`,
+        },
+      },
+    );
+
+    return response.data.choices[0].message.content;
+  } catch (error) {
+    console.error("Error fetching OpenAI response:", error);
+    return "Sorry, I couldn't process that.";
+  }
+}
+
+async function sendMessage() {
   if (message.value.trim()) {
-    messages.value.push(message.value);
-    message.value = "";
+    // Append user message to the chat history
+    messages.value.push({ role: "user", content: message.value });
+
+    // Fetch LLM response and append it to the chat history
+    const aiContent = await fetchOpenAIResponse(message.value);
+    messages.value.push({ role: "system", content: aiContent });
+
+    message.value = ""; // Clear the input after sending
   }
 }
 
