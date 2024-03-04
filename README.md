@@ -9,7 +9,7 @@
 <!-- ABOUT THE PROJECT -->
 
 <div>
-<div style="display:flex; justify-items:center;">
+<div align="center">
     <img src="images/chat-suggestions.png" width="300">
     <img src="images/chat.png" width="300">
 </div>
