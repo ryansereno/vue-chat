@@ -15,8 +15,8 @@
 ## About The Project
 
 <div>
-<div align="center">
-    <img src="images/chat.png" alt="Logo" width="500">
+<div style="display:flex; justify:center;">
+    <img src="images/chat-suggestions.png" alt="Logo" width="500">
     <br/>
     <br/>
     <img src="images/chat.png" alt="Logo" width="500">
