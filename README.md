@@ -10,8 +10,8 @@
 
 <div>
 <div style="display:flex; justify:center;">
-    <img src="images/chat-suggestions.png" alt="Logo" width="500">
-    <img src="images/chat.png" alt="Logo" width="500">
+    <img src="images/chat-suggestions.png" alt="Logo" width="300">
+    <img src="images/chat.png" alt="Logo" width="300">
 </div>
 <br/>
 
