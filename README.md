@@ -9,9 +9,9 @@
 <!-- ABOUT THE PROJECT -->
 
 <div>
-<div style="display:flex; justify:center;">
-    <img src="images/chat-suggestions.png" alt="Logo" width="300">
-    <img src="images/chat.png" alt="Logo" width="300">
+<div style="display:flex; justify-items:center;>
+    <img src="images/chat-suggestions.png" width="300">
+    <img src="images/chat.png" width="300">
 </div>
 <br/>
 
