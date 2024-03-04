@@ -17,7 +17,7 @@
 
 Starter template for ChatUI, built with Vue 3 and Vuetify components<br/>
 <br/>
-Supports OpenAI API and test streaming
+Supports OpenAI API and text streaming
 
 </div>
 
