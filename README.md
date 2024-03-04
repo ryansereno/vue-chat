@@ -23,7 +23,7 @@ Supports OpenAI API and test streaming
 
 ### Built With Vuetify
 
-[![Vuetify](https://skillicons.dev/icons?i=vuetify)](https://vuetify.org/)
+[![Vuetify](https://skillicons.dev/icons?i=vuetify)](https://vuetifyjs.com/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
