@@ -60,14 +60,15 @@
 
     <v-row class="flex-grow-0">
       <v-col cols="12">
-        <v-text-field
+        <v-textarea
           v-model="message"
           label="Enter your message"
           variant="outlined"
           @click:append="sendMessage"
           @keydown.enter.prevent="sendMessage"
           single-line
-          auto-grow
+          rows="2"
+          no-resize
         >
           <template v-slot:append>
             <v-btn
@@ -77,7 +78,7 @@
               variant="plain"
             ></v-btn>
           </template>
-        </v-text-field>
+        </v-textarea>
       </v-col>
     </v-row>
   </v-container>
