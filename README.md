@@ -12,16 +12,12 @@
 
 <!-- ABOUT THE PROJECT -->
 
-## About The Project
-
 <div>
 <div style="display:flex; justify:center;">
     <img src="images/chat-suggestions.png" alt="Logo" width="500">
-    <br/>
-    <br/>
     <img src="images/chat.png" alt="Logo" width="500">
-
 </div>
+<br/>
 
 Starter template for ChatUI, built with Vue 3 and Vuetify components<br/>
 <br/>
@@ -29,9 +25,9 @@ Supports OpenAI API and test streaming
 
 </div>
 
-### Built With Vue
+### Built With Vuetify
 
-[![Vue](https://skillicons.dev/icons?i=vue)](https://vue.org/)
+[![Vuetify](https://skillicons.dev/icons?i=vuetify)](https://vuetify.org/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -39,25 +35,25 @@ Supports OpenAI API and test streaming
 
 ## Installation
 
-Clone the repo
+Clone the repo:
 
 ```sh
 git clone https://github.com/ryansereno/vue-chat
 ```
 
-Install dependencies
+Install dependencies:
 
 ```sh
 npm install
 ```
 
-Add OpenAI keys in a .env
+Add OpenAI keys in a .env file:
 
 ```
 VITE_APP_OPENAI_KEY=your_keys
 ```
 
-Run
+Run:
 
 ```sh
 npm run dev
