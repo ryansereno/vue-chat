@@ -42,9 +42,9 @@
         class="ma-4"
         variant="tonal"
         color="primary"
-        @click="handleSubmitTemplatePrompt('Help me write a menifesto')"
+        @click="handleSubmitTemplatePrompt('Help me write a manifesto')"
       >
-        <v-card-text>Help me write a menifesto</v-card-text>
+        <v-card-text>Help me write a manifesto</v-card-text>
       </v-card>
       <v-card
         :key="index"
@@ -65,7 +65,7 @@
           label="Enter your message"
           variant="outlined"
           @click:append="sendMessage"
-          @keyup.enter="sendMessage"
+          @keydown.enter.prevent="sendMessage"
           single-line
           auto-grow
         >
@@ -85,7 +85,6 @@
 
 <script setup>
 import { ref, watch, nextTick, reactive } from "vue";
-import axios from "axios";
 
 const messagesContainer = ref(null);
 const message = ref("");
@@ -97,24 +96,39 @@ const openAIKey = import.meta.env.VITE_APP_OPENAI_KEY;
 async function fetchOpenAIResponse(userMessage) {
   const copyOfUserMessage = userMessage;
   asyncState.isLoading = true;
+  const currentMessageIndex = messages.value.length;
+  messages.value.push({ role: "system", content: "" });
   try {
-    const payload = {
-      model: "gpt-3.5-turbo",
-      messages: [...messages.value, { role: "user", content: userMessage }],
-    };
-
-    const response = await axios.post(
-      "https://api.openai.com/v1/chat/completions",
-      payload,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${openAIKey}`,
-        },
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${openAIKey}`,
       },
-    );
-
-    return response.data.choices[0].message.content;
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [...messages.value, { role: "user", content: userMessage }],
+        stream: true,
+      }),
+    });
+    const reader = response.body.getReader();
+    let llmResponse = "";
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const decoded = new TextDecoder("utf-8").decode(value);
+      const chunks = decoded
+        .replaceAll(/^data: /gm, "")
+        .split("\n")
+        .filter((c) => Boolean(c.length) && c !== "[DONE]")
+        .map((c) => JSON.parse(c));
+      for (let chunk of chunks) {
+        if (chunk.choices[0].delta.content) {
+          messages.value[currentMessageIndex].content +=
+            chunk.choices[0].delta.content;
+        }
+      }
+    }
   } catch (error) {
     message.value = copyOfUserMessage; // Restore the user message
     console.error("Error fetching OpenAI response:", error);
@@ -134,7 +148,6 @@ async function sendMessage() {
 
     // Fetch LLM response and append it to the chat history
     const LlmResponse = await fetchOpenAIResponse(userInput);
-    messages.value.push({ role: "system", content: LlmResponse });
   }
 }
 
