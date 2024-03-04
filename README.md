@@ -1,10 +1,6 @@
 <a name="readme-top"></a>
-
 <!-- PROJECT LOGO -->
 <div align="center">
-
-<h1 align="center">🦋</h1>
-
   <h2 align="center">
     Vue ChatUI Template
   </h2>
