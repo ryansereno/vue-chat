@@ -113,20 +113,31 @@ async function fetchOpenAIResponse(userMessage) {
       }),
     });
     const reader = response.body.getReader();
-    let llmResponse = "";
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
       const decoded = new TextDecoder("utf-8").decode(value);
-      const chunks = decoded
+      const lines = decoded
         .replaceAll(/^data: /gm, "")
         .split("\n")
-        .filter((c) => Boolean(c.length) && c !== "[DONE]")
-        .map((c) => JSON.parse(c));
-      for (let chunk of chunks) {
-        if (chunk.choices[0].delta.content) {
-          messages.value[currentMessageIndex].content +=
-            chunk.choices[0].delta.content;
+        .filter((c) => c);
+
+      for (let line of lines) {
+        if (line !== "[DONE]") {
+          try {
+            const chunk = JSON.parse(line);
+            if (
+              chunk.choices &&
+              chunk.choices[0] &&
+              chunk.choices[0].delta &&
+              chunk.choices[0].delta.content
+            ) {
+              messages.value[currentMessageIndex].content +=
+                chunk.choices[0].delta.content;
+            }
+          } catch (error) {
+            console.error("Error parsing JSON line:", error, line);
+          }
         }
       }
     }
